@@ -99,16 +99,14 @@ public class UDPTransmit extends CordovaPlugin {
 
 	public InetSocketAddress recvfrom() {
 		try {
-
-			// Selector selector = Selector.open();
-			// if (selector.selectNow() > 0) {
-			// channel.register(selector, SelectionKey.OP_READ);
-
-			read.clear();
-			InetSocketAddress address = (InetSocketAddress) channel
-					.receive(read);
-			read.flip();
-			// }
+			InetSocketAddress address = null;
+			Selector selector = Selector.open();
+			channel.register(selector, SelectionKey.OP_READ);
+			if (selector.selectNow() > 0) {
+				read.clear();
+				address = (InetSocketAddress) channel.receive(read);
+				read.flip();
+			}
 			return address;
 
 		} catch (IOException e) {
